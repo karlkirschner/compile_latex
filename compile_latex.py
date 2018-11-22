@@ -40,9 +40,9 @@ if __name__ == "__main__":
 
     remove_files(texfile)
 
-    # remove existing pdf of the input
-    if os.path.exists(sys.argv[1] + '.pdf'):
-        os.remove(sys.argv[1] + '.pdf')
+    # remove existing texfile.pdf
+    if os.path.exists('{0}.pdf'.format(texfile)):
+        os.remove('{0}.pdf'.format(texfile))
 
     # sequence of commands needed
     commands = [
