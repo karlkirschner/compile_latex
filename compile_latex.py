@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 """
-Script to compile a latex document (e.g. filename.tex)
+This is a script that can be used to compile a latex document (e.g. filename.tex), ensuring that all cross references
+    and citations are correctly displayed. The documents are compiled using pdflatex.
 
 Usage: compile_latex.py filename (i.e. minus the .tex extension)
+Requirement: pdflatex
 
-Note: you can comment out the last 'remove_files()' line to keep
-    all of the generated tex documents. This might be helpful
-    if you want to keep the .bbl, .toc, .lot and .lof files.
+Note: you can uncomment the last 'remove_files()' line to remove all of the Latex-generated files. What will be kept are
+    the tex and created pdf files.
+
+Karl N. Kirschner, Ph.D.
+k.n.kirschner@gmail.com
+
+MIT License
 """
 
-import glob
 import os
 import subprocess
 import sys
 
 
-# remove existing Latex generated files
+## remove existing Latex-generated files
 def remove_files(file_basename=None):
     extensions = ['aux', 'bbl', 'blg', 'log', 'nav', 'out', 'snm', 'toc', 'vrb', 'dvi', 'lot', 'lof']
     for ext in extensions:
@@ -25,7 +30,7 @@ def remove_files(file_basename=None):
 
 if __name__ == "__main__":
 
-    if len(sys.argv) == 2:  # requires the command and the input filename
+    if len(sys.argv) == 2:  ## requires the command and the input filename
 
         texfile = sys.argv[1]
 
@@ -40,19 +45,19 @@ if __name__ == "__main__":
 
     remove_files(texfile)
 
-    # remove existing texfile.pdf
+    ## remove existing texfile.pdf
     if os.path.exists('{0}.pdf'.format(texfile)):
         os.remove('{0}.pdf'.format(texfile))
 
-    # sequence of commands needed
+    ## sequence of commands
     commands = [
-        ['pdflatex', sys.argv[1] + '.tex'],
-        ['bibtex',   sys.argv[1] + '.aux'],
-        ['pdflatex', sys.argv[1] + '.tex'],
-        ['pdflatex', sys.argv[1] + '.tex']
+        ['pdflatex', '{0}.{1}'.format(texfile, 'tex')],
+        ['bibtex',   '{0}.{1}'.format(texfile, 'aux')],
+        ['pdflatex', '{0}.{1}'.format(texfile, 'tex')],
+        ['pdflatex', '{0}.{1}'.format(texfile, 'tex')]
         ]
 
     for compile_tex in commands:
         subprocess.call(compile_tex)
 
-    remove_files(texfile)
+    #remove_files(texfile)
