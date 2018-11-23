@@ -7,4 +7,7 @@ Note: you can uncomment the last 'remove_files()' line to remove all of the Late
     the tex and created pdf files.
 
 Karl N. Kirschner, Ph.D.
+
 k.n.kirschner@gmail.com
+
+MIT License
