@@ -5,3 +5,6 @@ Requirement: pdflatex
 
 Note: you can uncomment the last 'remove_files()' line to remove all of the Latex-generated files. What will be kept are
     the tex and created pdf files.
+
+Karl N. Kirschner, Ph.D.
+k.n.kirschner@gmail.com
