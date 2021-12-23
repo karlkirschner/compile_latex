@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-This is a script that can be used to compile a latex document (e.g. filename.tex), ensuring that all cross references
-    and citations are correctly displayed. The documents are compiled using pdflatex.
+This is a script that can be used to compile a latex document (e.g. filename.tex),
+    ensuring that all cross references and citations are correctly displayed. The
+    documents are compiled using pdflatex.
 
 Usage: compile_latex.py filename (i.e. minus the .tex extension)
 Requirement: pdflatex
 
-Note: you can uncomment the last 'remove_files()' line to remove all of the Latex-generated files. What will be kept are
-    the tex and created pdf files.
+Note: the last 'remove_files()' line removes all of the Latex-generated files.
 
 Karl N. Kirschner, Ph.D.
 k.n.kirschner@gmail.com
@@ -22,7 +22,9 @@ import sys
 
 ## remove existing Latex-generated files
 def remove_files(file_basename=None):
-    extensions = ['aux', 'bbl', 'blg', 'log', 'nav', 'out', 'snm', 'toc', 'vrb', 'dvi', 'lot', 'lof']
+    extensions = ['aux', 'bbl', 'blg', 'log', 'nav', 'out', 'snm',
+                  'toc', 'vrb', 'dvi', 'lot', 'lof', 'glo', 'ist',
+                  'bcf', 'acn', 'run.xml']
     for ext in extensions:
         if os.path.exists('{0}.{1}'.format(file_basename, ext)):
             os.remove('{0}.{1}'.format(file_basename, ext))
@@ -60,4 +62,4 @@ if __name__ == "__main__":
     for compile_tex in commands:
         subprocess.call(compile_tex)
 
-    #remove_files(texfile)
+    remove_files(texfile)
