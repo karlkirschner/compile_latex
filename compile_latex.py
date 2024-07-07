@@ -9,9 +9,10 @@ import sys
 def remove_files(file_basename: str):
     ''' Remove latex files other than the TEX and PDF files.'''
 
-    extensions = ['aux', 'bbl', 'blg', 'log', 'nav', 'out', 'snm',
-                  'toc', 'vrb', 'dvi', 'lot', 'lof', 'glo', 'ist',
-                  'bcf', 'acn', 'run.xml']
+    extensions = ['aux', 'acn', 'bbl', 'bcf', 'blg',
+                  'dvi', 'glo', 'idx', 'ilg', 'ind',
+                  'ist', 'lof', 'log', 'lot', 'nav',
+                  'out', 'snm', 'toc', 'vrb', 'run.xml']
 
     if not isinstance(file_basename, str):
         raise TypeError(f'file_basename (i.e. {file_basename}) was not provided as a string')
