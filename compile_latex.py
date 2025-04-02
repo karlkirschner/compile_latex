@@ -28,7 +28,7 @@ def remove_files(file_basename: str):
                     print(f'Error removing {file_path}: {error}')
 
 
-def compile_latex(file_basename: str):
+def compile_latex(file_basename: str, bib: bool):
     """Compile the LaTeX document."""
 
     if os.path.exists(f'{file_basename}.pdf'):
@@ -37,11 +37,13 @@ def compile_latex(file_basename: str):
         except OSError as error:
             print(f'Error removing existing PDF: {error}')
 
-    commands = [['pdflatex', f'{file_basename}.tex'],
-                ['bibtex',   f'{file_basename}.aux'],
-                ['pdflatex', f'{file_basename}.tex'],
-                ['pdflatex', f'{file_basename}.tex']
-               ]
+    if bib:
+        commands = [['pdflatex', f'{file_basename}.tex'],
+                    ['bibtex',   f'{file_basename}.aux'],
+                    ['pdflatex', f'{file_basename}.tex']]
+    else:
+        commands = [['pdflatex', f'{file_basename}.tex'],
+                    ['pdflatex', f'{file_basename}.tex']]
 
     for command in commands:
         try:
@@ -50,6 +52,32 @@ def compile_latex(file_basename: str):
             print(f'Error executing command {command}: {error}')
             sys.exit(1)
 
+
+def main():
+    """Main function to parse arguments and compile the LaTeX document."""
+
+    parser = argparse.ArgumentParser(description="Compile a LaTeX document.")
+    parser.add_argument('inputfile', help='LaTeX file to compile (without .tex extension).')
+    parser.add_argument('-b', '--bibtex', action='store_false', help='LaTeX file does NOT uses a bibtex file.')
+    parser.add_argument('-d', '--delete', action='store_true', help='Delete temporary LaTeX files.')
+    args = parser.parse_args()
+
+    inputfile = args.inputfile
+
+    if not inputfile.endswith(".tex"):
+        print("Error: Input file must end with '.tex'.")
+        sys.exit(1)
+    elif not os.path.isfile(inputfile):
+        print(f"Error: File '{inputfile}' does not exist.")
+        sys.exit(1)
+    else:
+        file_basename = os.path.splitext(inputfile)[0] #Extract basename
+
+        compile_latex(file_basename=file_basename, bib=args.bibtex)
+
+        if args.delete:
+            remove_files(file_basename)
+            print('\nRemoved LaTeX temporary files.\nDone.')
 
 if __name__ == "__main__":
     """ This script compiles a latex document using pdflatex, ensuring that all
@@ -73,24 +101,4 @@ if __name__ == "__main__":
 
     MIT License
 """
-    parser = argparse.ArgumentParser(description="Compile a LaTeX document.")
-    parser.add_argument('inputfile', help='LaTeX file to compile (without .tex extension).')
-    parser.add_argument('-d', '--delete', action='store_true', help='Delete temporary LaTeX files.')
-    args = parser.parse_args()
-
-    inputfile = args.inputfile
-
-    if not inputfile.endswith(".tex"):
-        print("Error: Input file must end with '.tex'.")
-        sys.exit(1)
-    elif not os.path.isfile(inputfile):
-        print(f"Error: File '{inputfile}' does not exist.")
-        sys.exit(1)
-    else:
-        file_basename = os.path.splitext(inputfile)[0]
-
-        compile_latex(file_basename)
-
-        if args.delete:
-            remove_files(file_basename)
-            print('\nRemoved LaTeX temporary files.\nDone.')
+    main()
