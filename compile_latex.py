@@ -28,57 +28,24 @@ def remove_files(file_basename: str):
                 print(f'Error removing {file_path}: {error}')
 
 
-# def compile_latex(file_basename: str, bib: bool):
-#     """Compile the LaTeX document."""
-
-#     if os.path.exists(f'{file_basename}.pdf'):
-#         try:
-#             os.remove(f'{file_basename}.pdf')
-#         except OSError as error:
-#             print(f'Error removing existing PDF: {error}')
-
-#     if bib:
-#         commands = [['pdflatex', f'{file_basename}.tex'],
-#                     ['bibtex',   f'{file_basename}.aux'],
-#                     ['pdflatex', f'{file_basename}.tex']]
-#     else:
-#         commands = [['pdflatex', f'{file_basename}.tex'],
-#                     ['pdflatex', f'{file_basename}.tex']]
-
-#     for command in commands:
-#         try:
-#             subprocess.run(command, check=True)
-#         except subprocess.CalledProcessError as error:
-#             print(f'Error executing command {command}: {error}')
-#             sys.exit(1)
-
-
 def compile_latex(file_basename: str, bib: bool):
-    """Compile the LaTeX document (pdflatex + optional biber)."""
+    """Compile the LaTeX document."""
 
-    pdf_path = f'{file_basename}.pdf'
-    if os.path.exists(pdf_path):
+    if os.path.exists(f'{file_basename}.pdf'):
         try:
-            os.remove(pdf_path)
+            os.remove(f'{file_basename}.pdf')
         except OSError as error:
             print(f'Error removing existing PDF: {error}')
 
     if bib:
-        # biblatex+biber workflow:
-        # 1) pdflatex creates .bcf
-        # 2) biber reads .bcf and writes .bbl
-        # 3) pdflatex resolves bibliography + crossrefs (usually needs two runs)
-        commands = [
-            ['pdflatex', '-interaction=nonstopmode', f'{file_basename}.tex'],
-            ['biber', file_basename],  # basename only (no extension)
-            ['pdflatex', '-interaction=nonstopmode', f'{file_basename}.tex'],
-            ['pdflatex', '-interaction=nonstopmode', f'{file_basename}.tex'],
-        ]
+        commands = [['pdflatex', f'{file_basename}.tex'],
+                    # ['bibtex',   f'{file_basename}.aux'],
+                    ['biber', file_basename],
+                    ['pdflatex', f'{file_basename}.tex'],
+                    ['pdflatex', f'{file_basename}.tex']]
     else:
-        commands = [
-            ['pdflatex', '-interaction=nonstopmode', f'{file_basename}.tex'],
-            ['pdflatex', '-interaction=nonstopmode', f'{file_basename}.tex'],
-        ]
+        commands = [['pdflatex', f'{file_basename}.tex'],
+                    ['pdflatex', f'{file_basename}.tex']]
 
     for command in commands:
         try:
@@ -86,6 +53,41 @@ def compile_latex(file_basename: str, bib: bool):
         except subprocess.CalledProcessError as error:
             print(f'Error executing command {command}: {error}')
             sys.exit(1)
+
+
+# def compile_latex(file_basename: str, bib: bool):
+#     """Compile the LaTeX document (pdflatex + optional biber)."""
+
+#     pdf_path = f'{file_basename}.pdf'
+#     if os.path.exists(pdf_path):
+#         try:
+#             os.remove(pdf_path)
+#         except OSError as error:
+#             print(f'Error removing existing PDF: {error}')
+
+#     if bib:
+#         # biblatex+biber workflow:
+#         # 1) pdflatex creates .bcf
+#         # 2) biber reads .bcf and writes .bbl
+#         # 3) pdflatex resolves bibliography + crossrefs (usually needs two runs)
+#         commands = [
+#             ['pdflatex', f'{file_basename}.tex'],
+#             ['biber', file_basename],
+#             ['pdflatex', f'{file_basename}.tex'],
+#             ['pdflatex', f'{file_basename}.tex'],
+#         ]
+#     else:
+#         commands = [
+#             ['pdflatex', f'{file_basename}.tex'],
+#             ['pdflatex', f'{file_basename}.tex'],
+#         ]
+
+#     for command in commands:
+#         try:
+#             subprocess.run(command, check=True)
+#         except subprocess.CalledProcessError as error:
+#             print(f'Error executing command {command}: {error}')
+#             sys.exit(1)
 
 
 
